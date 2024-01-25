@@ -212,7 +212,7 @@
 
             <span class="meta-info-item post-update-date">
                 <i class="icon fa-solid fa-file-pen"></i>&nbsp;
-                <span class="datetime" data-updated="Sat Jan 13 2024 18:29:08 GMT+0800">2024-01-13 18:29:08</span>
+                <span class="datetime" data-updated="Thu Jan 25 2024 20:50:23 GMT+0800">2024-01-25 20:50:23</span>
             </span>
         
 
@@ -260,7 +260,7 @@
                 <div class="post-content keep-markdown-body">
                     
 
-                    <h1 id="NSSCTF-Round-16-Basic-pwn"><a href="#NSSCTF-Round-16-Basic-pwn" class="headerlink" title="NSSCTF Round#16 Basic pwn"></a>NSSCTF Round#16 Basic pwn</h1><p>好简单的两个题。对于我这种半只脚还没踩进pwn坑的小白十分友好。体验了一下ak pwn的感觉。因为考完试太太太困了所以只做了最近在看的pwn（才不是因为misc是流量题瞪眼法十分钟解决不了</p>
+                    <p>好简单的两个题。对于我这种半只脚还没踩进pwn坑的小白十分友好。体验了一下ak pwn的感觉。因为考完试太太太困了所以只做了最近在看的pwn（才不是因为misc是流量题瞪眼法十分钟解决不了</p>
 <h2 id="nc-pwnre"><a href="#nc-pwnre" class="headerlink" title="nc_pwnre"></a>nc_pwnre</h2><p>连接之后发现是一道re</p>
 <p>两个函数的意思是对str中的每个字符循环，和0x10异或</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">result = [...]</span><br><span class="line">result = [i ^ <span class="number">0x10</span> <span class="keyword">for</span> i <span class="keyword">in</span> result]</span><br><span class="line"></span><br><span class="line">string = <span class="string">&quot;&quot;</span>.join(<span class="built_in">chr</span>(x) <span class="keyword">for</span> x <span class="keyword">in</span> result)</span><br><span class="line"><span class="built_in">print</span>(string)</span><br></pre></td></tr></table></figure>
@@ -355,7 +355,7 @@
             <div class="pc-post-toc right-toc">
                 <div class="post-toc-wrap border-box">
     <div class="post-toc border-box">
-        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#NSSCTF-Round-16-Basic-pwn"><span class="nav-text">NSSCTF Round#16 Basic pwn</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#nc-pwnre"><span class="nav-text">nc_pwnre</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ret-text"><span class="nav-text">ret_text</span></a></li></ol></li></ol>
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#nc-pwnre"><span class="nav-text">nc_pwnre</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ret-text"><span class="nav-text">ret_text</span></a></li></ol>
     </div>
 </div>
 
@@ -524,7 +524,7 @@
             <div class="tablet-post-toc">
                 <div class="post-toc-wrap border-box">
     <div class="post-toc border-box">
-        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#NSSCTF-Round-16-Basic-pwn"><span class="nav-text">NSSCTF Round#16 Basic pwn</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#nc-pwnre"><span class="nav-text">nc_pwnre</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ret-text"><span class="nav-text">ret_text</span></a></li></ol></li></ol>
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#nc-pwnre"><span class="nav-text">nc_pwnre</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ret-text"><span class="nav-text">ret_text</span></a></li></ol>
     </div>
 </div>
 
