@@ -209,6 +209,61 @@
                 <div class="home-post-item-bottom border-box">
                     
                     <h3 class="home-post-title border-box">
+                        <a href="/2024/01/28/%E5%9F%BA%E6%9C%ACROP-1/">
+                            基本ROP
+                        </a>
+                    </h3>
+
+                    <div class="home-post-content keep-markdown-body">
+                        
+                            ret2text
+
+32位程序。开了NX，栈不可执行
+ida中查看可知使用了gets函数，存在栈溢出漏洞。在secure函数中存在调用system(“&#x2F;bin&#x2F;sh”)的代码。地址为0x804863a
+找偏移量
+
+
+断在了0x62...
+                        
+                    </div>
+
+                    
+
+<div class="post-meta-info-container border-box home">
+    <div class="post-meta-info border-box">
+        
+            <span class="meta-info-item border-box">
+                <i class="icon fas fa-history"></i>&nbsp;<span class="home-post-history" data-updated="Sun Jan 28 2024 22:51:53 GMT+0800">2024-01-28 22:51:53</span>
+            </span>
+        
+
+        
+
+        
+
+        
+
+        
+        
+        
+        
+    </div>
+
+    
+        <a class="home-read-more" href="/2024/01/28/%E5%9F%BA%E6%9C%ACROP-1/">阅读全文&nbsp;<i class="icon fas fa-angle-right"></i></a>
+    
+</div>
+
+                </div>
+            </li>
+        
+            <li class="home-post-item">
+
+                
+
+                <div class="home-post-item-bottom border-box">
+                    
+                    <h3 class="home-post-title border-box">
                         <a href="/2024/01/28/Hack-the-box-Responder/">
                             Hack the box: Responder
                         </a>
