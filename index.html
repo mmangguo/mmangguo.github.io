@@ -53,157 +53,32 @@
 
     <!-- home first screen  -->
     
-        if (hexo-config('first_screen')) {
-  $temp-fs-bg-img-light = hexo-config('first_screen.background_img')
-  $temp-fs-bg-img-dark = hexo-config('first_screen.background_img_dark')
-}
-else {
-  $temp-fs-bg-img-light = ''
-  $temp-fs-bg-img-dark = ''
-}
+        
+<div class="first-screen-container border-box flex-center fade-in-down-animation">
+    <div class="first-screen-content border-box">
+        <div class="top-placeholder border-box"></div>
 
-$fs-bg-img-light = $temp-fs-bg-img-light ? $temp-fs-bg-img-light : '/images/bg.svg'
-$fs-bg-img-dark = $temp-fs-bg-img-dark ? $temp-fs-bg-img-dark : $fs-bg-img-light
+        <div class="middle-placeholder border-box">
+            
+                <div class="description border-box">
+                    
+                        
+                            
+                                <div class="desc-item border-box"><span class="desc">Keep loving</span><span class="cursor">｜</span></div>
+                            
+                        
+                    
+                </div>
+            
 
-$root = hexo-config('root')
+            
+        </div>
 
-.first-screen-container {
-  width 100%
-  height 100vh
-  overflow hidden
-  background-image url($root + $fs-bg-img-light)
-  background-position-x center
-  background-position-y center
-  background-size cover
-  background-repeat-x no-repeat
-  background-repeat-y no-repeat
-
-
-  .dark-mode & {
-    background-image url($root + $fs-bg-img-dark)
-  }
-
-  .first-screen-content {
-    display flex
-    flex-direction column
-    align-items center
-    justify-content space-between
-    width 80%
-    height 90%
-    padding-top calc(var(--header-height) * 0.5)
-
-    +keep-tablet() {
-      padding-top calc(var(--header-height) * 0.5 * 0.9)
-    }
-
-    +keep-mobile() {
-      padding-top calc(var(--header-height) * 0.5 * 0.8)
-    }
-
-    .description {
-      display var(--first-screen-display)
-      color var(--first-screen-font-color-light)
-      font-weight bold
-      font-size var(--first-screen-font-size)
-      font-family var(--first-screen-font-family)
-      line-height 1.8
-      text-align center
-      transform translateY(var(--first-screen-font-offset))
-      opacity 0
-
-      .dark-mode & {
-        color var(--first-screen-font-color-dark)
-
-        .desc-item {
-          .desc
-          .cursor {
-            color var(--first-screen-font-color-dark)
-          }
-        }
-      }
-
-
-      .desc-item {
-        .desc {
-          color var(--first-screen-font-color-light)
-        }
-
-        .cursor {
-          color var(--first-screen-font-color-light)
-          animation blink-caret 0.8s step-end infinite
-        }
-      }
-
-
-      +keep-tablet() {
-        font-size calc(var(--first-screen-font-size) * 0.9)
-      }
-    }
-
-
-    .bottom-placeholder {
-      width 100%
-
-      .sc-icon-list {
-        display flex
-        justify-content center
-
-        .sc-icon-item {
-          display flex
-          align-items center
-          margin 0 1rem
-          cursor pointer
-
-          i {
-            color var(--first-screen-icon-color-light)
-            font-size var(--first-screen-icon-size)
-          }
-
-
-          svg {
-            width var(--first-screen-icon-size)
-            height var(--first-screen-icon-size)
-
-            path {
-              fill var(--first-screen-icon-color-light)
-            }
-          }
-
-
-          .dark-mode & {
-            i {
-              color var(--first-screen-icon-color-dark)
-            }
-
-            svg {
-              path {
-                fill var(--first-screen-icon-color-dark)
-              }
-            }
-          }
-
-
-          +keep-tablet() {
-            i {
-              font-size calc(var(--first-screen-icon-size) * 0.9)
-            }
-
-            svg {
-              width calc(var(--first-screen-icon-size) * 0.9)
-              height calc(var(--first-screen-icon-size) * 0.9)
-            }
-          }
-
-
-          a {
-            display flex !important
-            align-items center !important
-          }
-        }
-      }
-    }
-  }
-}
+        <div class="bottom-placeholder border-box">
+            
+        </div>
+    </div>
+</div>
 
     
 
@@ -326,64 +201,6 @@ $root = hexo-config('root')
                     <div class="home-content-container fade-in-down-animation">
     
     <ul class="home-post-list border-box">
-        
-            <li class="home-post-item">
-
-                
-
-                <div class="home-post-item-bottom border-box">
-                    
-                    <h3 class="home-post-title border-box">
-                        <a href="/2024/03/24/pwn%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/">
-                            pwn学习记录
-                        </a>
-                    </h3>
-
-                    <div class="home-post-content keep-markdown-body">
-                        
-                            tool
-file xxx
-
-checksec –file&#x3D;xxx
-
-objdump -h xxx
-
-readelf -W -l xxx
-
-ROPgadget –binary xxx –string ‘&#x2F;bin&#x2F;sh’
-...
-                        
-                    </div>
-
-                    
-
-<div class="post-meta-info-container border-box home">
-    <div class="post-meta-info border-box">
-        
-            <span class="meta-info-item border-box">
-                <i class="icon fas fa-history"></i>&nbsp;<span class="home-post-history" data-updated="Sun Mar 24 2024 13:13:36 GMT+0800">2024-03-24 13:13:36</span>
-            </span>
-        
-
-        
-
-        
-
-        
-
-        
-        
-        
-        
-    </div>
-
-    
-        <a class="home-read-more" href="/2024/03/24/pwn%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/">阅读全文&nbsp;<i class="icon fas fa-angle-right"></i></a>
-    
-</div>
-
-                </div>
-            </li>
         
             <li class="home-post-item">
 
@@ -855,6 +672,57 @@ ROPgadget –binary xxx –string ‘&#x2F;bin&#x2F;sh’
 
     
         <a class="home-read-more" href="/2024/01/19/pwn%E7%BB%83%E4%B9%A01/">阅读全文&nbsp;<i class="icon fas fa-angle-right"></i></a>
+    
+</div>
+
+                </div>
+            </li>
+        
+            <li class="home-post-item">
+
+                
+
+                <div class="home-post-item-bottom border-box">
+                    
+                    <h3 class="home-post-title border-box">
+                        <a href="/2024/01/13/NewstarCTF-2023-week2-ret2libc%E8%AF%A6%E7%BB%86%E8%A7%A3%E6%9E%90/">
+                            NewstarCTF 2023 week2 ret2libc详细解析
+                        </a>
+                    </h3>
+
+                    <div class="home-post-content keep-markdown-body">
+                        
+                            newstar2023的题，在buu上还可以做，算是我正儿八经做的第一道pwn，太曲折了啊啊啊。
+存在pop_rdi_ret的gadget可以利用
+
+在x86_64架构中，函数调用的参数通过寄存器来传递，而不是通过栈来传递。前六个整数或者指针参数是通...
+                        
+                    </div>
+
+                    
+
+<div class="post-meta-info-container border-box home">
+    <div class="post-meta-info border-box">
+        
+            <span class="meta-info-item border-box">
+                <i class="icon fas fa-history"></i>&nbsp;<span class="home-post-history" data-updated="Thu Jan 25 2024 20:50:16 GMT+0800">2024-01-25 20:50:16</span>
+            </span>
+        
+
+        
+
+        
+
+        
+
+        
+        
+        
+        
+    </div>
+
+    
+        <a class="home-read-more" href="/2024/01/13/NewstarCTF-2023-week2-ret2libc%E8%AF%A6%E7%BB%86%E8%A7%A3%E6%9E%90/">阅读全文&nbsp;<i class="icon fas fa-angle-right"></i></a>
     
 </div>
 
