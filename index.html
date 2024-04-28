@@ -209,6 +209,65 @@
                 <div class="home-post-item-bottom border-box">
                     
                     <h3 class="home-post-title border-box">
+                        <a href="/2024/04/28/dll%E5%8A%AB%E6%8C%81%E8%85%BE%E8%AE%AF%E4%BC%9A%E8%AE%AE/">
+                            dll劫持一个蓝色软件
+                        </a>
+                    </h3>
+
+                    <div class="home-post-content keep-markdown-body">
+                        
+                            过滤出蓝色软件的进程
+
+
+找到有loadlibrary的
+
+
+使用AheadLib生成代码
+
+
+在vs里面创建一个dll项目，把生成的cpp文件复制到dllmain
+注意保留#include &quot;pch.h&quot;
+12345678910...
+                        
+                    </div>
+
+                    
+
+<div class="post-meta-info-container border-box home">
+    <div class="post-meta-info border-box">
+        
+            <span class="meta-info-item border-box">
+                <i class="icon fas fa-history"></i>&nbsp;<span class="home-post-history" data-updated="Sun Apr 28 2024 20:46:29 GMT+0800">2024-04-28 20:46:29</span>
+            </span>
+        
+
+        
+
+        
+
+        
+
+        
+        
+        
+        
+    </div>
+
+    
+        <a class="home-read-more" href="/2024/04/28/dll%E5%8A%AB%E6%8C%81%E8%85%BE%E8%AE%AF%E4%BC%9A%E8%AE%AE/">阅读全文&nbsp;<i class="icon fas fa-angle-right"></i></a>
+    
+</div>
+
+                </div>
+            </li>
+        
+            <li class="home-post-item">
+
+                
+
+                <div class="home-post-item-bottom border-box">
+                    
+                    <h3 class="home-post-title border-box">
                         <a href="/2024/02/04/ActiveMQ-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%EF%BC%88CVE-2015-5254%EF%BC%89%E5%A4%8D%E7%8E%B0%E5%8F%8A%E5%88%86%E6%9E%90/">
                             ActiveMQ 反序列化漏洞（CVE-2015-5254）复现及分析
                         </a>
@@ -672,57 +731,6 @@ ROPgadget –binary xxx –string ‘&#x2F;bin&#x2F;sh’
 
     
         <a class="home-read-more" href="/2024/01/19/pwn%E7%BB%83%E4%B9%A01/">阅读全文&nbsp;<i class="icon fas fa-angle-right"></i></a>
-    
-</div>
-
-                </div>
-            </li>
-        
-            <li class="home-post-item">
-
-                
-
-                <div class="home-post-item-bottom border-box">
-                    
-                    <h3 class="home-post-title border-box">
-                        <a href="/2024/01/13/NewstarCTF-2023-week2-ret2libc%E8%AF%A6%E7%BB%86%E8%A7%A3%E6%9E%90/">
-                            NewstarCTF 2023 week2 ret2libc详细解析
-                        </a>
-                    </h3>
-
-                    <div class="home-post-content keep-markdown-body">
-                        
-                            newstar2023的题，在buu上还可以做，算是我正儿八经做的第一道pwn，太曲折了啊啊啊。
-存在pop_rdi_ret的gadget可以利用
-
-在x86_64架构中，函数调用的参数通过寄存器来传递，而不是通过栈来传递。前六个整数或者指针参数是通...
-                        
-                    </div>
-
-                    
-
-<div class="post-meta-info-container border-box home">
-    <div class="post-meta-info border-box">
-        
-            <span class="meta-info-item border-box">
-                <i class="icon fas fa-history"></i>&nbsp;<span class="home-post-history" data-updated="Thu Jan 25 2024 20:50:16 GMT+0800">2024-01-25 20:50:16</span>
-            </span>
-        
-
-        
-
-        
-
-        
-
-        
-        
-        
-        
-    </div>
-
-    
-        <a class="home-read-more" href="/2024/01/13/NewstarCTF-2023-week2-ret2libc%E8%AF%A6%E7%BB%86%E8%A7%A3%E6%9E%90/">阅读全文&nbsp;<i class="icon fas fa-angle-right"></i></a>
     
 </div>
 
